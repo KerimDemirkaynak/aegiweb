@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    
+    <title data-i18n="meta_title">Aegisub | Advanced Subtitle Editor</title>
+    <meta name="description" content="Aegisub is a free, cross-platform open source tool for creating and modifying subtitles." data-i18n-attr="meta_desc">
+    <meta name="keywords" content="aegisub, subtitles, altyazı, editor, ass, ssa, typesetting, karaoke, video">
+    <meta name="author" content="Aegisub Project">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aegisub.org/">
+    <meta property="og:title" content="Aegisub | Advanced Subtitle Editor" data-i18n-attr="meta_title">
+    <meta property="og:description" content="Aegisub is a free, cross-platform open source tool for creating and modifying subtitles." data-i18n-attr="meta_desc">
+    <meta property="og:image" content="https://raw.githubusercontent.com/Aegisub/Aegisub/master/docs/art-sources/aegisub-icon-mk2.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Aegisub | Advanced Subtitle Editor" data-i18n-attr="meta_title">
+    <meta property="twitter:description" content="Aegisub is a free, cross-platform open source tool for creating and modifying subtitles." data-i18n-attr="meta_desc">
+    <meta property="twitter:image" content="https://raw.githubusercontent.com/Aegisub/Aegisub/master/docs/art-sources/aegisub-icon-mk2.png">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%233b82f6'/><path d='M25 50 Q50 20 75 50 Q50 80 25 50' fill='white'/><circle cx='50' cy='50' r='10' fill='%230f172a'/></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --accent: #8b5cf6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg-dark); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+
+        /* Navbar */
+        header {
+            padding: 20px 50px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px);
+            position: fixed; width: 100%; top: 0; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .brand { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .brand svg { width: 35px; height: 35px; }
+        .logo-text {
+            font-size: 24px; font-weight: 800;
+            background: linear-gradient(90deg, #60a5fa, var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        nav { display: flex; gap: 30px; align-items: center; }
+        nav a { color: var(--text-light); text-decoration: none; font-weight: 600; transition: color 0.3s; }
+        nav a:hover { color: var(--primary); }
+        .lang-select { background: transparent; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 4px 8px; cursor: pointer; outline: none; }
+        .lang-select option { background: var(--bg-card); color: var(--text-light); }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 120px 20px 50px;
+            background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-dark) 70%);
+        }
+        .hero h1 { font-size: 4rem; margin-bottom: 20px; font-weight: 800; max-width: 900px; line-height: 1.1; }
+        .hero p { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 40px; max-width: 600px; }
+        
+        .btn { display: inline-block; padding: 16px 32px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6); }
+        .btn-secondary { background: transparent; color: var(--text-light); border: 2px solid rgba(255,255,255,0.1); margin-left: 15px; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+
+        /* Features */
+        .features { padding: 100px 20px; max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; font-weight: 800; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .card { background: var(--bg-card); padding: 40px 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.1); }
+        .icon { font-size: 40px; margin-bottom: 20px; }
+        .card h3 { font-size: 1.5rem; margin-bottom: 15px; }
+        .card p { color: var(--text-muted); }
+
+        /* Downloads */
+        .downloads { background: rgba(30, 41, 59, 0.5); padding: 100px 20px; border-top: 1px solid rgba(255,255,255,0.02); }
+        .downloads-container { max-width: 900px; margin: 0 auto; }
+        .download-item { display: flex; justify-content: space-between; align-items: center; padding: 25px; background: rgba(0,0,0,0.2); border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .download-info h4 { font-size: 1.2rem; margin-bottom: 5px; }
+        .download-info p { color: var(--text-muted); font-size: 0.95rem; }
+        .dl-btn { padding: 10px 24px; border-radius: 6px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; font-weight: 600; transition: background 0.3s; white-space: nowrap; }
+        .dl-btn:hover { background: var(--primary); }
+        
+        .dict-badge { background: linear-gradient(90deg, #e11d48, #be123c); font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; vertical-align: middle; margin-left: 10px; letter-spacing: 0.5px;}
+
+        /* Footer */
+        footer { text-align: center; padding: 50px 20px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.05); background: var(--bg-dark); }
+        footer p { margin-bottom: 5px; }
+
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; }
+            .hero h1 { font-size: 2.5rem; }
+            .btn-secondary { margin-left: 0; margin-top: 15px; display: block; width: fit-content; margin: 15px auto 0; }
+            .download-item { flex-direction: column; text-align: center; gap: 15px; }
+            nav a { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#3b82f6"/>
+                <path d="M20 50 Q50 15 80 50 Q50 85 20 50" fill="white"/>
+                <circle cx="50" cy="50" r="12" fill="#0f172a"/>
+                <circle cx="53" cy="47" r="4" fill="white"/>
+            </svg>
+            <span class="logo-text">Aegisub</span>
+        </a>
+        <nav>
+            <a href="#features" data-i18n="nav_feat">Features</a>
+            <a href="#download" data-i18n="nav_dl">Download</a>
+            <a href="https://github.com/TypesettingTools/Aegisub" target="_blank">GitHub</a>
+            <select id="langSwitcher" class="lang-select" aria-label="Change Language">
+                <option value="en">English</option>
+                <option value="tr">Türkçe</option>
+                <option value="es">Español</option>
+                <option value="ru">Русский</option>
+                <option value="zh">简体中文</option>
+            </select>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1 data-i18n="hero_title">Advanced Subtitle Editor</h1>
+        <p data-i18n="hero_desc">Aegisub is a free, cross-platform open source tool for creating and modifying subtitles. Designed for translation, karaoke, and typography.</p>
+        
+        <div>
+            <a href="#download" class="btn btn-primary" id="main-dl-btn">Download Aegisub</a>
+            <a href="#features" class="btn btn-secondary" data-i18n="btn_more">Learn More</a>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <h2 class="section-title" data-i18n="feat_main">Why Aegisub?</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="icon">🎵</div>
+                <h3 data-i18n="f1_t">Visual Audio Sync</h3>
+                <p data-i18n="f1_d">Time subtitles to audio precisely with the advanced audio spectrum and waveform view.</p>
+            </div>
+            <div class="card">
+                <div class="icon">🎨</div>
+                <h3 data-i18n="f2_t">Full ASS Support</h3>
+                <p data-i18n="f2_d">Native support for the advanced SubStation Alpha format. Complex typography and positioning made easy.</p>
+            </div>
+            <div class="card">
+                <div class="icon">⚙️</div>
+                <h3 data-i18n="f3_t">Automation</h3>
+                <p data-i18n="f3_d">Write your own macros and karaoke effects using the Lua-based Automation engine.</p>
+            </div>
+            <div class="card">
+                <div class="icon">🎬</div>
+                <h3 data-i18n="f4_t">Real-time Video</h3>
+                <p data-i18n="f4_d">See your typesetting in action immediately with live video preview.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="download" class="downloads">
+        <div class="downloads-container">
+            <h2 class="section-title" data-i18n="dl_main">Downloads</h2>
+            
+            <div class="download-item">
+                <div class="download-info">
+                    <h4>Windows (64-bit)</h4>
+                    <p data-i18n="dl_w1">Installer for Windows 10 and 11.</p>
+                </div>
+                <a href="https://github.com/TypesettingTools/Aegisub/releases/latest" target="_blank" rel="noopener noreferrer" class="dl-btn" data-i18n="btn_dl">Download</a>
+            </div>
+
+            <div class="download-item">
+                <div class="download-info">
+                    <h4 data-i18n="dl_w2_t">Windows (Portable)</h4>
+                    <p data-i18n="dl_w2">No installation required, runs from a USB drive.</p>
+                </div>
+                <a href="https://github.com/TypesettingTools/Aegisub/releases/latest" target="_blank" rel="noopener noreferrer" class="dl-btn" data-i18n="btn_dl">Download</a>
+            </div>
+
+            <div class="download-item">
+                <div class="download-info">
+                    <h4>macOS</h4>
+                    <p data-i18n="dl_m1">Universal DMG for macOS 10.15 and later.</p>
+                </div>
+                <a href="https://github.com/TypesettingTools/Aegisub/releases/latest" target="_blank" rel="noopener noreferrer" class="dl-btn" data-i18n="btn_dl">Download</a>
+            </div>
+
+            <div class="download-item">
+                <div class="download-info">
+                    <h4>Linux</h4>
+                    <p data-i18n="dl_l1">Source code and build instructions.</p>
+                </div>
+                <a href="https://github.com/TypesettingTools/Aegisub" target="_blank" rel="noopener noreferrer" class="dl-btn" data-i18n="btn_gh">Go to GitHub</a>
+            </div>
+
+            <br><br>
+            <h2 class="section-title" style="font-size: 2rem; margin-bottom: 30px;" data-i18n="pl_main">Plugins & Extras</h2>
+            
+            <div class="download-item" style="border-left: 4px solid var(--accent);">
+                <div class="download-info">
+                    <h4 data-i18n="pl_d_t">Turkish Spellchecker Dictionary</h4>
+                    <p data-i18n="pl_d_d">Add Turkish spellcheck support to Aegisub.</p>
+                </div>
+                <a href="https://github.com/kerimdemirkaynak/aegisub-turkish-dictionary/releases/latest" target="_blank" rel="noopener noreferrer" class="dl-btn" data-i18n="btn_dl">Download</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p><span data-i18n="ft_1">&copy; <span id="year"></span> Aegisub Project. Open Source</span> (BSD/ISC).</p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const i18n = {
+            en: {
+                meta_title: "Aegisub | Advanced Subtitle Editor",
+                meta_desc: "Aegisub is a free, cross-platform open source tool for creating and modifying subtitles.",
+                nav_feat: "Features", nav_dl: "Download",
+                hero_title: "Advanced Subtitle Editor",
+                hero_desc: "Aegisub is a free, cross-platform open source tool for creating and modifying subtitles. Designed for translation, karaoke, and typography.",
+                btn_more: "Learn More",
+                feat_main: "Why Aegisub?",
+                f1_t: "Visual Audio Sync", f1_d: "Time subtitles to audio precisely with the advanced audio spectrum and waveform view.",
+                f2_t: "Full ASS Support", f2_d: "Native support for the advanced SubStation Alpha format. Complex typography and positioning made easy.",
+                f3_t: "Automation", f3_d: "Write your own macros and karaoke effects using the Lua-based Automation engine.",
+                f4_t: "Real-time Video", f4_d: "See your typesetting in action immediately with live video preview.",
+                dl_main: "Downloads",
+                dl_w1: "Installer for Windows 10 and 11.",
+                dl_w2_t: "Windows (Portable)", dl_w2: "No installation required, runs from a USB drive.",
+                dl_m1: "Universal DMG for macOS 10.15 and later.",
+                dl_l1: "Source code and build instructions.",
+                btn_dl: "Download", btn_gh: "Go to GitHub",
+                pl_main: "Plugins & Extras",
+                pl_d_t: "Turkish Spellcheck Dictionary", pl_d_d: "Add automated Turkish spellchecking support (.exe installer included).",
+                ft_1: "© {year} Aegisub Project. Open Source",
+                os_win: "Download for Windows", os_mac: "Download for macOS", os_lin: "Get Linux Source", os_def: "Download Aegisub"
+            },
+            tr: {
+                meta_title: "Aegisub | Gelişmiş Altyazı Düzenleyicisi",
+                meta_desc: "Aegisub, altyazı oluşturmak ve düzenlemek için ücretsiz, açık kaynaklı ve çapraz platform bir araçtır.",
+                nav_feat: "Özellikler", nav_dl: "İndir",
+                hero_title: "Gelişmiş Altyazı Düzenleyicisi",
+                hero_desc: "Aegisub; video çevirileri, karaoke efektleri ve tipografi için tasarlanmış ücretsiz ve açık kaynaklı bir altyazı programıdır.",
+                btn_more: "Daha Fazla",
+                feat_main: "Neden Aegisub?",
+                f1_t: "Görsel Ses Eşleme", f1_d: "Gelişmiş ses spektrumu ve dalga formu görünümü ile altyazılarınızı sesle milisaniyesine kadar eşzamanlayın.",
+                f2_t: "Tam ASS Desteği", f2_d: "Gelişmiş SubStation Alpha formatını yerel olarak destekler. Karmaşık tipografi artık çok kolay.",
+                f3_t: "Otomasyon", f3_d: "Lua tabanlı otomasyon motoru ile kendi makrolarınızı yazın ve iş akışınızı hızlandırın.",
+                f4_t: "Canlı Önizleme", f4_d: "Yaptığınız değişiklikleri video üzerinde anında görün.",
+                dl_main: "İndirme Seçenekleri",
+                dl_w1: "Windows 10 ve 11 için kurulum dosyası.",
+                dl_w2_t: "Windows (Taşınabilir)", dl_w2: "Kurulum gerektirmez, USB bellekten çalıştırılabilir.",
+                dl_m1: "macOS 10.15 ve üzeri için evrensel DMG dosyası.",
+                dl_l1: "Kaynak koddan derleme talimatları ve bağımlılıklar.",
+                btn_dl: "İndir", btn_gh: "GitHub'a Git",
+                pl_main: "Eklentiler",
+                pl_d_t: "Aegisub Türkçe Sözlük", pl_d_d: "Aegisub programına otomatik Türkçe imla kılavuzu yeteneği kazandırır.",
+                ft_1: "© {year} Aegisub Projesi. Açık Kaynak",
+                os_win: "Windows için İndir", os_mac: "macOS için İndir", os_lin: "Linux Kodunu İndir", os_def: "Aegisub'ı İndir"
+            },
+            es: {
+                meta_title: "Aegisub | Editor de Subtítulos Avanzado",
+                meta_desc: "Aegisub es una herramienta gratuita y de código abierto para crear y modificar subtítulos.",
+                nav_feat: "Características", nav_dl: "Descargar",
+                hero_title: "Editor de Subtítulos Avanzado",
+                hero_desc: "Aegisub es una herramienta multiplataforma gratuita para crear subtítulos, diseñada para traducción, karaoke y tipografía.",
+                btn_more: "Saber Más",
+                feat_main: "¿Por qué Aegisub?",
+                f1_t: "Sincronización Visual", f1_d: "Sincroniza subtítulos con precisión usando el espectro de audio avanzado.",
+                f2_t: "Soporte ASS Total", f2_d: "Soporte nativo para el formato SubStation Alpha. Tipografía compleja hecha fácil.",
+                f3_t: "Automatización", f3_d: "Escribe tus propias macros usando el motor de automatización basado en Lua.",
+                f4_t: "Vista Previa", f4_d: "Mira tus cambios en acción inmediatamente con la vista previa de video.",
+                dl_main: "Descargas",
+                dl_w1: "Instalador para Windows 10 y 11.",
+                dl_w2_t: "Windows (Portátil)", dl_w2: "No requiere instalación.",
+                dl_m1: "DMG universal para macOS 10.15+.",
+                dl_l1: "Código fuente e instrucciones.",
+                btn_dl: "Descargar", btn_gh: "Ir a GitHub",
+                pl_main: "Complementos",
+                pl_d_t: "Diccionario Turco", pl_d_d: "Añade corrección ortográfica en turco.",
+                ft_1: "© {year} Proyecto Aegisub. Código Abierto",
+                os_win: "Descargar para Windows", os_mac: "Descargar para macOS", os_lin: "Descargar para Linux", os_def: "Descargar Aegisub"
+            },
+            ru: {
+                meta_title: "Aegisub | Продвинутый редактор субтитров",
+                meta_desc: "Aegisub - это бесплатный кроссплатформенный инструмент с открытым исходным кодом для создания субтитров.",
+                nav_feat: "Возможности", nav_dl: "Скачать",
+                hero_title: "Редактор Субтитров",
+                hero_desc: "Aegisub — это бесплатный кроссплатформенный инструмент для создания и редактирования субтитров, караоке и тайпсеттинга.",
+                btn_more: "Подробнее",
+                feat_main: "Почему Aegisub?",
+                f1_t: "Визуальный тайминг", f1_d: "Точная синхронизация по аудио спектрограмме.",
+                f2_t: "Поддержка ASS", f2_d: "Полная поддержка формата SubStation Alpha.",
+                f3_t: "Автоматизация", f3_d: "Пишите свои скрипты на Lua для караоке и эффектов.",
+                f4_t: "Видео в реальном времени", f4_d: "Мгновенный предпросмотр видео и субтитров.",
+                dl_main: "Скачать",
+                dl_w1: "Установщик для Windows 10 и 11.",
+                dl_w2_t: "Windows (Portable)", dl_w2: "Установка не требуется.",
+                dl_m1: "Универсальный DMG для macOS.",
+                dl_l1: "Исходный код для Linux.",
+                btn_dl: "Скачать", btn_gh: "Перейти на GitHub",
+                pl_main: "Плагины",
+                pl_d_t: "Турецкий словарь", pl_d_d: "Добавьте проверку турецкой орфографии.",
+                ft_1: "© {year} Проект Aegisub. Open Source",
+                os_win: "Скачать для Windows", os_mac: "Скачать для macOS", os_lin: "Скачать для Linux", os_def: "Скачать Aegisub"
+            },
+            zh: {
+                meta_title: "Aegisub | 高级字幕编辑器",
+                meta_desc: "Aegisub 是一款免费、跨平台的开源字幕制作和修改工具。",
+                nav_feat: "功能", nav_dl: "下载",
+                hero_title: "高级字幕编辑器",
+                hero_desc: "Aegisub 是一款免费的跨平台开源字幕制作工具，专为翻译、卡拉OK和特效排版设计。",
+                btn_more: "了解更多",
+                feat_main: "为什么选择 Aegisub?",
+                f1_t: "可视化音频同步", f1_d: "利用高级音频频谱和波形图精确调整字幕时间轴。",
+                f2_t: "完整 ASS 支持", f2_d: "原生支持 SubStation Alpha 格式。轻松实现复杂的排版。",
+                f3_t: "自动化脚本", f3_d: "使用基于 Lua 的自动化引擎编写自己的宏和特效。",
+                f4_t: "实时视频预览", f4_d: "通过实时视频预览即时查看排版效果。",
+                dl_main: "下载中心",
+                dl_w1: "Windows 10 / 11 安装程序。",
+                dl_w2_t: "Windows (便携版)", dl_w2: "免安装，解压即用。",
+                dl_m1: "macOS 10.15 及以上版本 DMG。",
+                dl_l1: "Linux 源代码及编译指南。",
+                btn_dl: "下载", btn_gh: "访问 GitHub",
+                pl_main: "插件与扩展",
+                pl_d_t: "土耳其语拼写检查词典", pl_d_d: "添加土耳其语拼写检查支持。",
+                ft_1: "© {year} Aegisub 项目。开源软件",
+                os_win: "下载 Windows 版", os_mac: "下载 macOS 版", os_lin: "获取 Linux 源码", os_def: "下载 Aegisub"
+            }
+        };
+
+        const getLang = (code) => {
+            const short = code.slice(0, 2).toLowerCase();
+            return i18n[short] ? short : 'en';
+        };
+
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        let detectedOS = 'def';
+        if (userAgent.indexOf('windows') !== -1) detectedOS = 'win';
+        else if (userAgent.indexOf('mac') !== -1) detectedOS = 'mac';
+        else if (userAgent.indexOf('linux') !== -1) detectedOS = 'lin';
+
+        const applyLanguage = (langCode) => {
+            const dict = i18n[langCode] || i18n['en'];
+            const year = new Date().getFullYear();
+            
+            document.documentElement.lang = langCode;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    el.innerHTML = dict[key].replace('{year}', year);
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-attr]').forEach(el => {
+                const key = el.getAttribute('data-i18n-attr');
+                if (dict[key]) {
+                    if (el.tagName === 'META' && el.getAttribute('content')) el.setAttribute('content', dict[key]);
+                    else if (el.tagName === 'TITLE') el.innerText = dict[key];
+                }
+            });
+
+            const mainBtn = document.getElementById('main-dl-btn');
+            mainBtn.innerText = dict['os_' + detectedOS];
+            
+            document.getElementById('langSwitcher').value = langCode;
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const browserLang = window.navigator.userLanguage || window.navigator.language;
+            const initLang = getLang(browserLang);
+            applyLanguage(initLang);
+
+            document.getElementById('langSwitcher').addEventListener('change', (e) => {
+                applyLanguage(e.target.value);
+            });
+        });
+    </script>
+</body>
+</html>
